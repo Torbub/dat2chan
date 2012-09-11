@@ -83,6 +83,10 @@ div#right-menu {
   top:56px;
   width:25%;
   margin-right:5px;
+  opacity:0.8;
+}
+div#right-menu:hover {
+opacity:1;
 }
 div#results {
   color: #ddd;
