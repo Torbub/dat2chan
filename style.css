@@ -17,16 +17,17 @@ div.reply > h3 {
   font-weight: normal;
   background-color:#334F47;
   margin: 0px;
-  margin-bottom: 8px;
   margin-top: 5px;
   padding: 1px;
   padding-left: 3px;
+  margin-top:0px;
 }
 .reply {
   background-color: #4B6D63;
   margin-left: 30px;
   max-width: 771px;
   word-wrap: break-word;
+  overflow:auto;
 }
 .thread {
   background-color:#4B6D63;
@@ -34,11 +35,14 @@ div.reply > h3 {
   border-top-right-radius: 10px;
   max-width: 800px;
   word-wrap: break-word;
+  overflow:auto;
+  margin-top:5px;
 }
 .message, .reply-message {
   font-family: "DejaVu Sans", "Carme", "Calibri", "Verdana";
   padding-bottom: 8px;
   padding-left: 8px;
+  padding-top:8px;
 }
 .thread h2, .reply h3 {
   text-align: center;
@@ -51,25 +55,32 @@ div.thread > h2 {
   display: block;
   font-size: 16px;
   font-weight: normal;
-  margin-bottom: 8px;
   background-color:#334F47;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   padding: 2px;
   padding-left: 8px;
   padding-right: 4px;
+  margin-bottom: 0px;
+  margin-top: 0px;
 }
 div.thread .op, div.reply .poster {
   color: #ffb300;
-  font-weight: bold;
 }
 .time {
-  color: #ffb300;
   font-size: 14px;
   float: right;
 }
 .op, .poster {
   float: left;
+  color: #ffb300;
+}
+div#bilde {
+  background-color:#334F47;
+  padding:5px;
+  padding-left:8px;
+  float:left;
+  margin-right:8px;
 }
 h2 > .time {
   padding-top: 2px;
@@ -89,6 +100,7 @@ div#navigation h1 {
   display: inline;
   font-size: 18px;
   margin-left: 5px;
+  background-color:inherit;
 }
 div#navigation a {
   margin-left: 5px;
@@ -97,12 +109,52 @@ div#action {
   color: #00916f;
   height:25px;
   width: 100%;
+  position:fixed;
+  top:25px;
+  background-color:#363636;
+  border-width:3px;
+  border-style:double;
+  border-color:#4D4D4D;
+  border-top:none;
+  left:0px;
 }
 div#action a {
   margin-left: 5px;
   display: inline;
   color: #00916f;
 }
+div#postform {
+margin-left:5px;
+margin-right:65%;
+margin-top:5px;
+background-color:#363636;
+padding:5px;
+position:fixed;
+top:50px;
+border-top-left-radius:10px;
+border-top-right-radius:10px;
+border-bottom-left-radius:10px;
+border-bottom-right-radius:10px;
+
+}
+div#reply_form{
+background-color:#363636;
+margin-left:5px;
+margin-right:65%;
+margin-top:5px;
+position:fixed;
+padding:5px;
+border-top-left-radius:5px;
+border-top-right-radius:5px;
+border-bottom-left-radius:5px;
+border-bottom-right-radius:5px;
+top:75px;
+left:10px;
+}
+div#reply_input{
+background-color:#4B6D63;
+}
+
 div#right-menu {
   background-color:#363636;
   border: 3px double #4d4d4d;
@@ -111,14 +163,11 @@ div#right-menu {
   top:56px;
   width:25%;
   margin-right:5px;
-<<<<<<< HEAD
   opacity:0.8;
 }
 div#right-menu:hover {
 opacity:1;
-=======
   z-index: 100;
->>>>>>> The board now shows replies! Great success.
 }
 div#results {
   color: #ddd;
@@ -139,7 +188,7 @@ ol {
   margin-top: 0px;
   padding-top: 0px;
 }
-input[type=text] {
+#searchlist > input {
   font-family: "DejaVu Sans", "Carme", "Calibri", "Verdana";
   font-size: 16px;
   margin-left: 10px;
@@ -153,3 +202,23 @@ hr {
   margin-left: 5px;
   margin-right: 5px;
 }
+input [type=text]{
+font-family: "DejaVu Sans", "Carme", "Calibri", "Verdana";
+}
+textarea {
+font-family:"DejaVu Sans","Carme","Calibri","Verdana";
+}
+.anchor {
+  position: relative;
+  top: -35px;
+}
+div#rules {
+  background-color:#4B6D63;
+  }
+div#rules h2, h3, h1{
+  background-color:#334F47;
+  text-align: center;
+  }
+/* h1 {
+  background-color:inherit
+  } */

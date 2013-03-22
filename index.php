@@ -1,12 +1,11 @@
 <?php
 // Load various stuff.
 include('DB.class.php');
-include('Util.class.php');
 include('Poster.class.php');
 
 // Extract the parameters passed in the URL.
 $params = explode('/', $_GET['url']);
-
+$baseurl = 'http://www.dat2chan.org';
 // Wrap content in header.
 include('header.html');
 
@@ -16,10 +15,15 @@ switch (count($params)) {
         echo 'You requested nothing at all. What are you doing, bro?';
         break;
     case 1:
-        $board_q = 'SELECT id FROM dat2chan_boards WHERE name=?';
+        if(empty($params[0])) {
+            Poster::front_page();
+            break;
+        }
+        $board_q = 'SELECT id FROM boards WHERE name=?';
         $board_r = DB::query($board_q, array($params[0]));
+        $board_name = $params[0];
         $board_r = $board_r[0]['id'];
-        $query = 'SELECT * FROM dat2chan_threads WHERE board=?';
+        $query = 'SELECT * FROM threads WHERE board=? ORDER BY last_activity DESC';
         $res = DB::query($query, array($board_r));
         if (count($res) == 0) {
             Poster::no_threads();
@@ -27,25 +31,72 @@ switch (count($params)) {
             foreach ($res as $r) {
               Poster::thread($r);
               $post_id = $r['id'];
-              $post_q = 'SELECT * FROM dat2chan_posts WHERE board=?' .
-                ' AND reply_to=?';
+              $post_q = 'SELECT * FROM posts WHERE board=?' .
+                ' AND reply_to=? ORDER BY id DESC LIMIT 5';
               $post_r = DB::query($post_q, array($board_r, $post_id));
+              $post_r = array_reverse($post_r);
               foreach ($post_r as $reply) {
                   Poster::reply($reply);
-              }
+                }
+            }
+        }
+        Poster::thread_form($board_r);
+        break;
+    case 2:
+    $thread_q = 'SELECT * FROM threads WHERE clean_title=?';
+	$thread_r = DB::query($thread_q,array($params[1]));
+    
+	if (count($thread_r) == 0) {
+        poster::invalid_thread();
+        }
+    else {
+        foreach ($thread_r as $thread) {
+            Poster::thread($thread);
+            $post_id = $thread['id'];
+            $post_q = 'SELECT * FROM posts WHERE reply_to=?';
+            $post_r = DB::query($post_q, array($post_id));
+            $board_q = 'SELECT id FROM boards WHERE name=?';
+            $board_r = DB::query($board_q, array($params[0]));
+            $board_name = $params[0];
+            $board_r = $board_r[0]['id'];
+            foreach ($post_r as $post) {
+                Poster::reply($post);
+            }
+
+        }
+        Poster::reply_form($post_id,$board_r);
+
+    }
+        break;
+    case 3:
+        if ($params[1]=='p') {
+            $board_q='SELECT id FROM boards WHERE name=?';
+            $board_r=DB::query($board_q,array($params[0]));
+            $board_r=$board_r[0]['id'];
+            $ant_threads=2;
+            $ant_thr=$ant_threads*$params[2];
+            $query='SELECT * FROM threads WHERE board=? ORDER BY last_activity DESC LIMIT ' . $ant_thr . ', ' . $ant_threads;
+            $result=DB::query($query,array($board_r));
+            if(count($result)==0){
+                Poster::no_threads();
+            }
+            else {
+              foreach ($result as $r) {
+                  Poster::thread($r);
+                  $post_id = $r['id'];
+                  $post_q = 'SELECT * FROM posts WHERE board=?' .
+                    ' AND reply_to=? ORDER BY id DESC LIMIT 5';
+                  $post_r = DB::query($post_q, array($board_r, $post_id));
+                  $post_r = array_reverse($post_r);
+                  foreach ($post_r as $reply) {
+                      Poster::reply($reply);
+                  }
+                }
             }
         }
         break;
-    case 2:
-        echo 'You requested a thread called "' . $params[1] . '" from a board '
-            . 'called "' . $params[0] . '".';
-        break;
-    case 3:
-        echo $params[1] == 'p' ? 'You requested page ' . $params[2] .
-            ' of the board "' . $params[0] . '".' :
-            'I am not really sure what you requested, bro.';
-        break;
+        
 }
-
 // Wrap content in footer.
 include('footer.html');
+?>
