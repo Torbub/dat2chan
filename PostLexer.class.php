@@ -6,6 +6,8 @@ class PostLexer {
         "/^(\(cite)/" => "T_CITE",
         "/^(\(italic)/" => "T_ITALIC",
         "/^(\(quote)/" => "T_QUOTE",
+        "/^(\(spoiler)/" => "T_SPOILER",
+        "/^(\(emote)/" => "T_EMOTICON",
         "/^(\".+\")/" => "T_STRING",
         "/^('.+')/" => "T_STRING",
         "/^(&quot;.+&quot;)/" =>  "T_STRING_HTML",
@@ -25,14 +27,38 @@ class PostLexer {
         for($i = 0; $i < count($tokens); $i++) {
             $t = $tokens[$i];
             switch ($t['token']) {
+            case "T_PAREN_START":
+                $res .= '(';
+                $open_tags[] = ')';
+                break;
             case "T_CODE":
                 $res .= $code_scope ? '</pre>' : '<pre>';
                 $code_scope = !$code_scope;
                 break;
             case "T_BOLD":
                 $res .= '<b>';
-                $open_tags[] = 'b';
+                $open_tags[] = '</b>';
                 $i++;
+                break;
+            case "T_SPOILER":
+                $res .= '<span class="spoiler">';
+                $open_tags[] = '</span>';
+                $i++;
+                break;
+            case "T_EMOTICON":
+                $src = $tokens[$i + 2];
+                switch ($src['match']) {
+                    case "happy":
+                        $res.= '<img src="http://www.dat2chan.org/' . $src['match'];
+                        $open_tags[] = '.gif">';
+                        $i += 2;
+                        break;
+                    case "sad":
+                        $res.= '<img src="http://www.dat2chan.org/' . $src['match'];
+                        $open_tags[] = '.gif">';
+                        $i += 2;
+                        break;
+                    }
                 break;
             case "T_CITE":
                 $cit = $tokens[$i + 2];
@@ -56,7 +82,7 @@ class PostLexer {
                 break;
             case "T_ITALIC":
                 $res .= '<i>';
-                $open_tags[] = 'i';
+                $open_tags[] = '</i>';
                 $i++;
                 break;
             case "T_QUOTE":
@@ -74,7 +100,10 @@ class PostLexer {
             case "T_PAREN_END":
                 $tag = array_pop($open_tags);
                 if ($tag !== null) {
-                    $res .= '</' . $tag . '>';
+                    $res .= $tag;
+                }
+                else {
+                    $res .= ')';
                 }
                 break;
             case "T_WHITESPACE":
@@ -84,7 +113,9 @@ class PostLexer {
         }
         $open_tags=array_reverse($open_tags);
         foreach($open_tags as $tag) {
-            $res .= '</' . $tag . '>';
+            if ($tag != ')') {
+                $res .= $tag;
+            }
         }
         if ($code_scope == true) {
             $res .= "</pre>";

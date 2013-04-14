@@ -219,6 +219,14 @@ div#rules h2, h3, h1{
   background-color:#334F47;
   text-align: center;
   }
+.spoiler {
+  background-color:#141F1C;
+  color: #141F1C;
+}
+.spoiler:hover {
+  color: #ffffff;
+  background-color: #4B6D63;
+}
 /* h1 {
   background-color:inherit
   } */
