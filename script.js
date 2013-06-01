@@ -5,7 +5,7 @@
         $('.thread, .reply').each(function () {
             $(this).animate({marginLeft: '+=' + offset}, 0);
         });
-        $('#hide-watcher').funk(
+        $('#hide-watcher').funk([
             function() {
                 $('#hide-watcher > a').blur();
                 $('#watchlist, #searchlist').hide(250);
@@ -23,8 +23,8 @@
                 $('#watchlist, #searchlist').show(250);
                 var h = $('#right-menu').attr('old-height');
                 $('#hide-watcher > a').text('Hide');
-            });
-        $('#hide-watcher').funk(
+            }],"click");
+        $('#hide-watcher').funk([
             function() {
                 $('#watchlist, #searchlist').hide(250);
                 var h = $('#right-menu').height();
@@ -40,7 +40,7 @@
                     width: "25%",
                     height: h
                 }, 250);
-            });
+            }],"click");
         $('#postform').hide();
         $('#action').click(
             function(){
@@ -50,7 +50,7 @@
 
         
         $('#reply_input').hide();
-        $('#reply_hide').funk(
+        $('#reply_hide').funk([
             function(){
                 $('#reply_input').show(250);
                 $('#reply_hide > a').text('Hide');
@@ -60,7 +60,7 @@
                 $('#reply_input').hide(250);
                 $('#reply_hide > a').text('Reply');
                 $('#reply_hide').css('background-color','#363636');
-            }
+            }],"click"
         );
     
     
@@ -70,19 +70,21 @@
             $(anchor).css({"background-color":"#263632","border":"outset","border-color":"#263632","box-sizing":"border-box"});
         });
         
-        $('img').funk(
+        
+        $('img').funk([
             function() {
                 var url = $(this).attr("src");
-                $(this).data("oldurl",url);
-                url = url.replace("_thumb","");
+                url = url.replace(/_thumb/g,"");
                 $(this).attr("src", url);
                 $(this).css({"float":"none"});
             },
             function() {
-                url=$(this).data("oldurl");
+                url=$(this).attr("src");
+                url = url.replace(/\.jpg|\.png|\.gif/,'_thumb$&');
                 $(this).attr("src", url);
                 $(this).css({"float":"left"});
-            }
+            }],"click"
         );
+    
 	});
     
